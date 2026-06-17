@@ -35,8 +35,12 @@ async def infer_handler(request):
     req = await request.json()
     return web.json_response(infer(req))
 
+async def health_handler(request):
+    return web.json_response({"status": "ok"})
+
 app.add_routes(
     [
+        web.get("/health", health_handler),
         web.post("/infer", infer_handler)
     ]
 )
