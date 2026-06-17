@@ -1,1 +1,8 @@
-/*/venv
+venv/
+.venv/
+client/venv
+reset18-api/venv
+
+__pycache__/
+*.__pycache__
+.DS_Store
