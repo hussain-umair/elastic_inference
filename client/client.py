@@ -10,7 +10,7 @@ encoded = base64.b64encode(cv2.imencode(".jpeg", im)[1].tobytes()).decode("utf-8
 headers = {"Content-Type": "application/json"}
 t = time.perf_counter()
 response = requests.post(
-    "http://127.0.0.1:43653/predict",
+    "http://192.168.49.2:32265/predict",
     data=json.dumps({"data": encoded}),
     headers=headers
 )

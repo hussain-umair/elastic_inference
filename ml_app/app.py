@@ -4,15 +4,10 @@ import base64
 from PIL import Image
 import io
 import numpy as np
-
 from fastapi import FastAPI
 import time
-from prometheus_client import Histogram, start_http_server
 
 app = FastAPI()
-LATENCY = Histogram("inference_latency_seconds", "Inference latency")
-
-start_http_server(9000)
 
 preprocessor = ResNet18_Weights.DEFAULT.transforms()
 
@@ -39,9 +34,10 @@ def infer(d):
 
 @app.post("/infer")
 def infer_handler(payload: dict):
-    start = time.time()
     result = infer(payload)
 
-    latency = time.time() - start
-    LATENCY.observe(latency)
-    return {"labels": result, "latency": latency}
+    return {"labels": result}
+
+@app.get("/health")
+async def health():
+    return { "status": "ok"}
