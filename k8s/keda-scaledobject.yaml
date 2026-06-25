@@ -1,0 +1,26 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: ml-inference-scaler
+  namespace: ml-inference-ns
+spec:
+  scaleTargetRef:
+    name: ml-inference-dp
+
+  minReplicaCount: 2
+  maxReplicaCount: 10
+
+  pollingInterval: 10
+  cooldownPeriod: 30
+
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus-kube-prometheus-prometheus.ml-inference-ns.svc.cluster.local:9090
+        metricName: dispatcher_p95_latency
+        query: |
+          histogram_quantile(
+            0.95,
+            rate(dispatcher_request_latency_seconds_bucket[1m])
+          )
+        threshold: "0.5"

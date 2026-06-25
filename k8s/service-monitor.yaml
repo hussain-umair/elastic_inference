@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: dispatcher-monitor
+  namespace: ml-inference-ns
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: dispatcher
+  namespaceSelector:
+    matchNames:
+      - ml-inference-ns
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 5s
